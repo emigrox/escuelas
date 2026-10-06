@@ -20,26 +20,10 @@ api.interceptors.request.use((config) => {
 
 export const authService = {
   login: async (email: string, password: string) => {
-    try {
-      const res = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', res.data.access_token);
-      localStorage.setItem('user', JSON.stringify({ email: res.data.user_email, role: res.data.role }));
-      return res.data;
-    } catch (err) {
-      // Mock de emergencia si corre sin backend para demo
-      if (email === 'admin@admin.com') {
-        const mockData = {
-          access_token: 'mock-demo-token-corrientes',
-          token_type: 'bearer',
-          user_email: email,
-          role: 'admin',
-        };
-        localStorage.setItem('token', mockData.access_token);
-        localStorage.setItem('user', JSON.stringify({ email, role: 'admin' }));
-        return mockData;
-      }
-      throw err;
-    }
+    const res = await api.post('/auth/login', { email, password });
+    localStorage.setItem('token', res.data.access_token);
+    localStorage.setItem('user', JSON.stringify({ email: res.data.user_email, role: res.data.role }));
+    return res.data;
   },
   logout: () => {
     localStorage.removeItem('token');
