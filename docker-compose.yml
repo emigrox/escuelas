@@ -1,0 +1,53 @@
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: escuelas_db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-escuelas_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-escuelas_secret_2026}
+      POSTGRES_DB: ${POSTGRES_DB:-escuelas_corrientes}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-escuelas_user} -d ${POSTGRES_DB:-escuelas_corrientes}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: escuelas_backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-escuelas_user}:${POSTGRES_PASSWORD:-escuelas_secret_2026}@db:5432/${POSTGRES_DB:-escuelas_corrientes}
+      - SECRET_KEY=${SECRET_KEY:-super_secret_jwt_key_corrientes_2026}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@admin.com}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - DATA_PATH=/app/data_source
+    volumes:
+      - ./:/app/data_source:ro
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: escuelas_frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:

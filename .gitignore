@@ -1,0 +1,41 @@
+# Entornos y Secretos
+.env
+.env.local
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+*.egg-info/
+
+# Node / Frontend
+node_modules/
+frontend/node_modules/
+frontend/dist/
+dist/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Base de datos y volúmenes locales
+postgres_data/
+*.sqlite3
+
+# Archivos de gran tamaño a nivel país (>100MB bloqueados por GitHub)
+# Los datos filtrados específicos de Corrientes se encuentran versionados en backend/app/data/
+presentacionDeResultados_primeraVuelta.csv
+presentacionDeResultados_segundaVuelta.csv
+*.rar
+
+# IDEs y Sistema Operativo
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
