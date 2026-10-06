@@ -24,6 +24,16 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class ChangePasswordRequest(BaseModel):
+    old_password: str
+    new_password: str
+
+class UserCreateRequest(BaseModel):
+    email: str
+    password: str
+    full_name: Optional[str] = "Usuario del Sistema"
+    role: Optional[str] = "admin"
+
 # Dashboard Stats
 class StatCard(BaseModel):
     total_invertido: float
